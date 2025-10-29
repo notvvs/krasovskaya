@@ -28,9 +28,9 @@ class Settings(BaseSettings):
     # PostgreSQL Database
     DB_HOST: str = "localhost"
     DB_PORT: int = 5432
-    DB_USER: str = "postgres"
-    DB_PASSWORD: SecretStr = SecretStr("postgres")
-    DB_NAME: str = "jwttest"
+    DB_USER: str = "vvs"
+    DB_PASSWORD: SecretStr = SecretStr("1202")
+    DB_NAME: str = "jwt"
 
     @property
     def DATABASE_URL(self) -> str:
