@@ -1,19 +1,26 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.orm import DeclarativeBase
 from app.core.config import settings
 
 # PostgreSQL БД
 DATABASE_URL = settings.DATABASE_URL
 
-# Движок
-engine = create_engine(
+# Асинхронный движок
+engine = create_async_engine(
     DATABASE_URL,
     pool_pre_ping=True,  # Проверка соединения перед использованием
-    echo=False  # Логирование SQL запросов (можно включить для отладки)
+    echo=False,  # Логирование SQL запросов (можно включить для отладки)
+    future=True
 )
 
-# Фабрика сессий
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Фабрика асинхронных сессий
+AsyncSessionLocal = async_sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+    autocommit=False,
+    autoflush=False
+)
 
 
 # Базовый класс для моделей (SQLAlchemy 2.0 стиль)

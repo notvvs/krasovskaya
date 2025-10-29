@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.core.dependencies import get_repo, get_jwt_client, get_email_client
 from app.core.security import hash_password
 from app.db.models import User
-from app.repository.sqlite import DatabaseRepo
+from app.repository.postgres import DatabaseRepo
 from app.schemas.user import UserRegisterSchema, UserLoginSchema
 from app.services.email_service import EmailClient
 from app.services.jwt_client import JWTClient
@@ -17,7 +17,7 @@ router = APIRouter()
 async def register(creds: UserRegisterSchema, repo: DatabaseRepo = Depends(get_repo), email_client: EmailClient = Depends(get_email_client)):
     """Регистрация нового пользователя"""
     # Проверяем существование пользователя
-    if repo.check_user_exists(creds.email):
+    if await repo.check_user_exists(creds.email):
         raise HTTPException(status_code=400, detail="Пользователь с таким email уже существует")
 
     # Создаем нового пользователя
@@ -36,7 +36,7 @@ async def register(creds: UserRegisterSchema, repo: DatabaseRepo = Depends(get_r
         body=f"Ваш код подтверждения: {verify_code}"
     )
 
-    user_id = repo.save_user(new_user)
+    user_id = await repo.save_user(new_user)
 
     return {
         "message": "Код подтверждения отправлен",
@@ -44,9 +44,9 @@ async def register(creds: UserRegisterSchema, repo: DatabaseRepo = Depends(get_r
     }
 
 @router.post("/login")
-def login(creds: UserLoginSchema, repo: DatabaseRepo = Depends(get_repo), jwt_client: JWTClient = Depends(get_jwt_client)):
+async def login(creds: UserLoginSchema, repo: DatabaseRepo = Depends(get_repo), jwt_client: JWTClient = Depends(get_jwt_client)):
     """Вход в систему"""
-    user = repo.authenticate_user(creds.email, creds.password)
+    user = await repo.authenticate_user(creds.email, creds.password)
     if not user:
         raise HTTPException(status_code=401, detail="Неверные данные")
 
@@ -64,11 +64,3 @@ def login(creds: UserLoginSchema, repo: DatabaseRepo = Depends(get_repo), jwt_cl
         "token_type": "bearer"
     }
 
-@router.get("/send-test")
-async def send_test(email_client: EmailClient = Depends(get_email_client)):
-    await email_client.send_email(
-        to_email="ruzikisme@gmail.com",
-        subject="Тестовое письмо",
-        body="Привет! Это тестовое письмо."
-    )
-    return {"status": "sent"}

@@ -1,29 +1,28 @@
-from typing import Generator
+from typing import AsyncGenerator
 
 from fastapi import Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import SessionLocal
-from app.repository.sqlite import DatabaseRepo
+from app.db.session import AsyncSessionLocal
+from app.repository.postgres import DatabaseRepo
 from app.services.email_service import EmailClient
 from app.services.jwt_client import JWTClient
 
 
-def get_db() -> Generator[Session, None, None]:
-    """Dependency для получения сессии БД."""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    """Dependency для получения асинхронной сессии БД."""
+    async with AsyncSessionLocal() as session:
+        yield session
 
 
-def get_repo(db: Session = Depends(get_db)) -> DatabaseRepo:
+async def get_repo(db: AsyncSession = Depends(get_db)) -> DatabaseRepo:
     """Dependency для получения репозитория."""
     return DatabaseRepo(db)
 
+
 def get_jwt_client() -> JWTClient:
     return JWTClient()
+
 
 def get_email_client() -> EmailClient:
     return EmailClient()
