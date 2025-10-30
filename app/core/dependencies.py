@@ -7,6 +7,7 @@ from app.db.session import AsyncSessionLocal
 from app.repository.postgres import DatabaseRepo
 from app.services.email_service import EmailClient
 from app.services.jwt_client import JWTClient
+from app.services.redis_client import RedisClient
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
@@ -20,9 +21,12 @@ async def get_repo(db: AsyncSession = Depends(get_db)) -> DatabaseRepo:
     return DatabaseRepo(db)
 
 
-def get_jwt_client() -> JWTClient:
+async def get_jwt_client() -> JWTClient:
     return JWTClient()
 
 
-def get_email_client() -> EmailClient:
+async def get_email_client() -> EmailClient:
     return EmailClient()
+
+async def get_redis_client() -> RedisClient:
+    return RedisClient()
