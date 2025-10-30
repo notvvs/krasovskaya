@@ -22,15 +22,26 @@ class DatabaseRepo(BaseRepo):
 
     async def check_user_exists(self, email: str) -> bool:
         result = await self.db.execute(
-            select(User).filter(User.email == email)
+            select(User).where(User.email == email)
         )
         return result.scalar_one_or_none() is not None
 
     async def authenticate_user(self, email: str, password: str) -> User | None:
         result = await self.db.execute(
-            select(User).filter(User.email == email)
+            select(User).where(User.email == email)
         )
         user = result.scalar_one_or_none()
         if not user or not verify_password(password, user.hashed_password):
             return None
+        return user
+
+    async def verify_user(self, email: str):
+        result = await self.db.execute(
+            select(User).where(User.email == email)
+        )
+        user = result.scalar_one_or_none()
+        if not user:
+            return None
+        user.is_verified = True
+        await self.db.commit()
         return user
