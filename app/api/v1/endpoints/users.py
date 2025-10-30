@@ -2,19 +2,23 @@ import secrets
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.core.dependencies import get_repo, get_jwt_client, get_email_client
+from app.core.dependencies import get_repo, get_jwt_client, get_email_client, get_redis_client
 from app.core.security import hash_password
 from app.db.models import User
 from app.repository.postgres import DatabaseRepo
-from app.schemas.user import UserRegisterSchema, UserLoginSchema
+from app.schemas.user import UserRegisterSchema, UserLoginSchema, UserVerifySchema
 from app.services.email_service import EmailClient
 from app.services.jwt_client import JWTClient
+from app.services.redis_client import RedisClient
 
 router = APIRouter()
 
 
 @router.post("/register")
-async def register(creds: UserRegisterSchema, repo: DatabaseRepo = Depends(get_repo), email_client: EmailClient = Depends(get_email_client)):
+async def register(creds: UserRegisterSchema,
+                   repo: DatabaseRepo = Depends(get_repo),
+                   email_client: EmailClient = Depends(get_email_client),
+                   redis: RedisClient = Depends(get_redis_client)):
     """Регистрация нового пользователя"""
     # Проверяем существование пользователя
     if await repo.check_user_exists(creds.email):
@@ -29,6 +33,8 @@ async def register(creds: UserRegisterSchema, repo: DatabaseRepo = Depends(get_r
     )
 
     verify_code = ''.join(secrets.choice('0123456789') for _ in range(6))
+
+    await redis.save_verify_code(creds.email, verify_code)
 
     await email_client.send_email(
         to_email=creds.email,
@@ -51,8 +57,8 @@ async def login(creds: UserLoginSchema, repo: DatabaseRepo = Depends(get_repo), 
         raise HTTPException(status_code=401, detail="Неверные данные")
 
     # Проверяем, подтвержден ли email
-    # if not user.is_verified:
-    #     raise HTTPException(status_code=403, detail="Email не подтвержден")
+    if not user.is_verified:
+        raise HTTPException(status_code=403, detail="Email не подтвержден")
 
     # Создаем токены с email пользователя
     access_token = jwt_client.create_access_token(data={"sub": user.email})
@@ -64,3 +70,39 @@ async def login(creds: UserLoginSchema, repo: DatabaseRepo = Depends(get_repo), 
         "token_type": "bearer"
     }
 
+@router.post("/verify")
+async def verify(data: UserVerifySchema,
+                 redis: RedisClient = Depends(get_redis_client),
+                 repo: DatabaseRepo = Depends(get_repo)):
+    user_code = data.verify_code
+    correct_code = await redis.get_verify_code(data.email)
+
+    if user_code == correct_code:
+        await repo.verify_user(data.email)
+        return {
+            "message": "Пользователь подтвержден"
+        }
+    else:
+        raise HTTPException(
+            status_code=401, detail='Неверный код'
+        )
+
+@router.post("/resend-code")
+async def resend_code(email: str,
+                      redis: RedisClient = Depends(get_redis_client),
+                      email_client: EmailClient = Depends(get_email_client)
+                      ):
+
+    verify_code = ''.join(secrets.choice('0123456789') for _ in range(6))
+
+    await redis.save_verify_code(email, verify_code)
+
+    await email_client.send_email(
+        to_email=email,
+        subject="Подтверждение регистрации",
+        body=f"Ваш код подтверждения: {verify_code}"
+    )
+
+    return {
+        'message': 'Код отправлен'
+    }
