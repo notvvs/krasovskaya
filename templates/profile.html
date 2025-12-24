@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoilAnalyzer Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#30e85e",
+              "primary-hover": "#25c24d",
+              "secondary": "#93c8a0",
+              "background-light": "#f6f8f6",
+              "background-dark": "#112115",
+              "surface-dark": "#1a2e20",
+              "glass-border": "rgba(255, 255, 255, 0.08)",
+              "glass-bg": "rgba(255, 255, 255, 0.03)",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {
+                "DEFAULT": "1rem",
+                "lg": "1.5rem",
+                "xl": "2rem",
+                "2xl": "3rem",
+                "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(30, 45, 35, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .glass-input:focus {
+            border-color: #30e85e;
+            ring: 1px solid #30e85e;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-background-dark">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 glass-card border-b-0 border-b-glass-border">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-20">
+<!-- Logo -->
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-2xl">eco</span>
+</div>
+<span class="text-white text-xl font-bold tracking-tight">SoilAnalyzer</span>
+</div>
+<!-- Desktop Nav -->
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-secondary hover:text-primary text-sm font-semibold transition-colors" href="/dashboard">Dashboard</a>
+<a class="text-secondary hover:text-primary text-sm font-semibold transition-colors" href="/analyze">Analysis</a>
+<a class="text-white text-sm font-bold border-b-2 border-primary pb-1" href="/profile">Profile</a>
+<a class="text-secondary hover:text-primary text-sm font-semibold transition-colors" href="/history">History</a>
+<a class="text-secondary hover:text-primary text-sm font-semibold transition-colors" href="/about">About</a>
+</nav>
+<!-- Profile Actions -->
+<div class="flex items-center gap-4">
+<button class="text-secondary hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 size-2 bg-primary rounded-full"></span>
+</button>
+<div class="size-10 rounded-full bg-center bg-cover border-2 border-primary/30" data-alt="User profile avatar showing a smiling man" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCz11vc0XcQp0K727O1p2LwVRShcKTwKsLmLpZ853M8JX5PbYJgBN85JTgVW9dyj7m3WLW4iawH3f2pqZTVt1hSc67u1B0LV1d4qfN6ELQ0mYUp8Q8zcE8AktpG5XIgM11uRwFYU6V0FFtKmZteCElBdXWt8EWB0cai3RrUMMCECv_1dblyuVVo7NPYVNw9r7MQqVTjwup7WqImkmPnAHlkxI-weqp4UCYDrIwSr1S35AhuzWXbsdpoBwIlLGlpI0igJwwxSiehvEo');">
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl">
+<!-- Page Heading -->
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-white text-4xl font-extrabold tracking-tight mb-2">Личный кабинет</h1>
+<p class="text-secondary text-lg">Управляйте своим профилем и просматривайте статистику</p>
+</div>
+<div class="flex gap-3">
+<button class="glass-card px-4 py-2 rounded-full text-white text-sm font-bold hover:bg-white/5 transition flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+                    Export Data
+                </button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Column: Profile & Quick Stats -->
+<div class="space-y-6 lg:col-span-1">
+<!-- Profile Card -->
+<div class="glass-card rounded-xl p-6 flex flex-col items-center text-center relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative mb-4">
+<div class="size-28 rounded-full bg-cover bg-center border-4 border-background-dark shadow-2xl" data-alt="Large profile picture of Alex Ivanov" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCRyabIz3tVXOnG0GNjscblA537c9lsgsv9D2GgQ0NO_9h0EIuvyexDdShb7j9w_voR_YKhpsHdV2YT14URIKot6gw6QVPWyhSjbLu-E84ONrRQCyytZ-y4WHCB6c8nI2iPdb_qgosSJHE24jAkFzfasg9XJTGVv5A_TzhlTO1_8waNny9Yieb8T5UVZWnk2jPwTmLUehHlkTxngb7fQJaNlWWXISnvtoAHMP_FnAYuKVhfO8qmkqe7KqaJ3Mvf-LPjyu9RsCXaeK8');"></div>
+<div class="absolute bottom-0 right-0 bg-primary text-background-dark p-1.5 rounded-full border-4 border-background-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-sm font-bold">edit</span>
+</div>
+</div>
+<h2 class="text-white text-2xl font-bold mb-1">Алексей Иванов</h2>
+<p class="text-secondary text-sm mb-4">alex.ivanov@example.com</p>
+<div class="flex flex-wrap justify-center gap-2 mb-6">
+<span class="px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold border border-primary/20">Pro Analyst</span>
+<span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold border border-blue-500/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span> Verified
+                        </span>
+</div>
+<div class="w-full grid grid-cols-2 gap-3 pt-6 border-t border-white/10">
+<div class="text-center">
+<p class="text-2xl font-bold text-white">124</p>
+<p class="text-xs text-secondary uppercase tracking-wider font-semibold">Reports</p>
+</div>
+<div class="text-center">
+<p class="text-2xl font-bold text-white">2.4k</p>
+<p class="text-xs text-secondary uppercase tracking-wider font-semibold">Acres</p>
+</div>
+</div>
+</div>
+<!-- Vertical Stats -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Stat 1 -->
+<div class="glass-card rounded-xl p-5 flex flex-col justify-between h-32 hover:bg-white/5 transition-colors cursor-default">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-purple-500/20 rounded-lg text-purple-400">
+<span class="material-symbols-outlined">science</span>
+</div>
+<span class="text-xs font-medium text-green-400 flex items-center gap-0.5">
+                                +2.5% <span class="material-symbols-outlined text-[14px]">trending_up</span>
+</span>
+</div>
+<div>
+<p class="text-secondary text-xs font-medium mb-1">Avg pH Level</p>
+<p class="text-white text-2xl font-bold">6.8</p>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="glass-card rounded-xl p-5 flex flex-col justify-between h-32 hover:bg-white/5 transition-colors cursor-default">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-primary/20 rounded-lg text-primary">
+<span class="material-symbols-outlined">eco</span>
+</div>
+</div>
+<div>
+<p class="text-secondary text-xs font-medium mb-1">Nitrogen Saved</p>
+<p class="text-white text-2xl font-bold">15%</p>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="glass-card rounded-xl p-5 flex flex-col justify-between h-32 hover:bg-white/5 transition-colors cursor-default col-span-2">
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-yellow-500/20 rounded-lg text-yellow-400">
+<span class="material-symbols-outlined">token</span>
+</div>
+<span class="text-secondary text-sm font-medium">AI Credits</span>
+</div>
+<button class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-full transition">Top Up</button>
+</div>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-white text-3xl font-bold">500</p>
+<p class="text-secondary text-xs">Credits remaining this month</p>
+</div>
+<div class="h-1.5 w-24 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-yellow-400 w-3/4 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Tabs & Main Content -->
+<div class="lg:col-span-2 flex flex-col gap-6">
+<!-- Tabs Header -->
+<div class="glass-card rounded-xl p-2 flex gap-1">
+<button class="flex-1 py-3 px-4 rounded-lg text-secondary hover:text-white hover:bg-white/5 font-bold text-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">history</span>
+                        Активность
+                    </button>
+<button class="flex-1 py-3 px-4 rounded-lg bg-primary text-background-dark font-bold text-sm shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">settings</span>
+                        Настройки
+                    </button>
+</div>
+<!-- Content Area -->
+<div class="glass-card rounded-xl p-8 flex-1">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-white text-xl font-bold">Редактирование профиля</h3>
+<span class="text-xs text-secondary bg-white/5 px-3 py-1 rounded-full border border-white/5">Last updated 2 days ago</span>
+</div>
+<form class="space-y-8">
+<!-- Personal Info Section -->
+<div class="space-y-5">
+<h4 class="text-white text-sm uppercase tracking-wider font-bold border-b border-white/10 pb-2 mb-4">Личная информация</h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-secondary text-sm font-medium" for="first_name">Имя</label>
+<input class="w-full glass-input rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all placeholder-white/20" id="first_name" type="text" value="Алексей"/>
+</div>
+<div class="space-y-2">
+<label class="text-secondary text-sm font-medium" for="last_name">Фамилия</label>
+<input class="w-full glass-input rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all placeholder-white/20" id="last_name" type="text" value="Иванов"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-secondary text-sm font-medium" for="email">Email адрес</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-secondary">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+</span>
+<input class="w-full bg-white/5 border border-white/5 text-secondary rounded-lg pl-10 pr-4 py-3 text-sm cursor-not-allowed opacity-70" disabled="" id="email" type="email" value="alex.ivanov@example.com"/>
+<span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-secondary text-xs">
+                                        Verified
+                                    </span>
+</div>
+<p class="text-xs text-secondary/60">Для изменения email свяжитесь с поддержкой.</p>
+</div>
+<div class="space-y-2">
+<label class="text-secondary text-sm font-medium" for="bio">О себе</label>
+<textarea class="w-full glass-input rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 transition-all placeholder-white/20 resize-none" id="bio" rows="3">Специалист по агрохимии с 5-летним стажем. Интересуюсь AI в сельском хозяйстве.</textarea>
+</div>
+</div>
+<!-- Security Section -->
+<div class="space-y-5 pt-4">
+<h4 class="text-white text-sm uppercase tracking-wider font-bold border-b border-white/10 pb-2 mb-4">Безопасность</h4>
+<div class="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/5">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-white/5 rounded-full text-white">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<div>
+<p class="text-white text-sm font-bold">Пароль</p>
+<p class="text-secondary text-xs">Последнее изменение: 3 месяца назад</p>
+</div>
+</div>
+<button class="text-primary text-sm font-bold hover:text-primary-hover transition" type="button">Изменить</button>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/5">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-white/5 rounded-full text-white">
+<span class="material-symbols-outlined">smartphone</span>
+</div>
+<div>
+<p class="text-white text-sm font-bold">Двухфакторная аутентификация</p>
+<p class="text-primary text-xs flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary inline-block"></span> Включено
+                                        </p>
+</div>
+</div>
+<button class="text-secondary text-sm font-bold hover:text-white transition" type="button">Настроить</button>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center justify-end gap-4 pt-4 border-t border-white/10">
+<button class="px-6 py-3 rounded-full text-white text-sm font-bold hover:bg-white/10 transition" type="button">Отмена</button>
+<button class="px-8 py-3 rounded-full bg-primary hover:bg-primary-hover text-background-dark text-sm font-bold shadow-lg shadow-primary/20 transition transform hover:scale-105 active:scale-95 flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[20px]">save</span>
+                                Сохранить изменения
+                            </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</main>
+
+<!-- Scripts -->
+<script src="/static/js/navigation.js"></script>
+<script>
+// Load user data from token
+function loadUserData() {
+    const user = getUserFromToken();
+    if (!user) {
+        window.location.href = '/login';
+        return;
+    }
+
+    // Update email in display
+    const emailElements = document.querySelectorAll('[value="alex.ivanov@example.com"]');
+    emailElements.forEach(el => {
+        el.value = user.email;
+    });
+
+    // Update name if we can parse it from email
+    const emailName = user.email.split('@')[0];
+    const firstName = emailName.split('.')[0] || 'User';
+    const lastName = emailName.split('.')[1] || '';
+
+    const firstNameInput = document.getElementById('first_name');
+    if (firstNameInput) {
+        firstNameInput.value = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    }
+
+    const lastNameInput = document.getElementById('last_name');
+    if (lastNameInput) {
+        lastNameInput.value = lastName.charAt(0).toUpperCase() + lastName.slice(1);
+    }
+
+    // Update profile card name
+    const profileName = document.querySelector('.text-white.text-2xl.font-bold.mb-1');
+    if (profileName) {
+        profileName.textContent = `${firstName.charAt(0).toUpperCase() + firstName.slice(1)} ${lastName.charAt(0).toUpperCase() + lastName.slice(1)}`;
+    }
+
+    // Update profile card email
+    const profileEmail = document.querySelector('.text-secondary.text-sm.mb-4');
+    if (profileEmail) {
+        profileEmail.textContent = user.email;
+    }
+}
+
+// Load stats from API
+async function loadStats() {
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
+
+    try {
+        const response = await fetch('/api/v1/soil/stats', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        // Update reports count
+        const reportsCount = document.querySelector('.text-2xl.font-bold.text-white');
+        if (reportsCount && data.total_analyses !== undefined) {
+            reportsCount.textContent = data.total_analyses;
+        }
+    } catch (error) {
+        console.error('Error loading stats:', error);
+    }
+}
+
+// Add logout to header
+function addLogoutButton() {
+    const profileActions = document.querySelector('.flex.items-center.gap-4');
+    if (!profileActions) return;
+
+    const logoutBtn = document.createElement('button');
+    logoutBtn.className = 'flex items-center gap-2 px-4 py-2 text-secondary hover:text-white transition-colors text-sm font-medium';
+    logoutBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">logout</span>';
+    logoutBtn.onclick = logout;
+
+    profileActions.appendChild(logoutBtn);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserData();
+    loadStats();
+    addLogoutButton();
+});
+</script>
+</body></html>

@@ -13,3 +13,6 @@ class UserLoginSchema(BaseModel):
 class UserVerifySchema(BaseModel):
     email: str
     verify_code: str
+
+class ResendCodeSchema(BaseModel):
+    email: EmailStr

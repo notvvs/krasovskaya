@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Вход в систему - AI Soil Analysis</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#30e85e",
+              "primary-dark": "#25b048",
+              "background-light": "#f6f8f6",
+              "background-dark": "#112115",
+              "glass-bg": "rgba(26, 50, 32, 0.6)",
+              "glass-border": "rgba(48, 232, 94, 0.2)",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "2xl": "4rem", "full": "9999px"},
+            backdropBlur: {
+              'xs': '2px',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      /* Custom background pattern */
+      .bg-pattern {
+        background-image:
+          radial-gradient(circle at 10% 20%, rgba(48, 232, 94, 0.15) 0%, transparent 40%),
+          radial-gradient(circle at 90% 80%, rgba(48, 232, 94, 0.1) 0%, transparent 40%);
+      }
+
+      /* Glassmorphism utility */
+      .glass-card {
+        background: rgba(20, 40, 25, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col overflow-x-hidden transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col bg-pattern">
+<!-- Optional: Background Image Layer for texture -->
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none mix-blend-overlay" data-alt="Abstract microscopic soil texture pattern" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCXlckLh4le_wOolJWQm8TLREotJQah4quOFL5jRnoXPDNeF1r2UcYYRy--sT7OL9xgSg4X3iFOP72BIAIpqiMUlKtWyiECLIKeZfBlzDg2zsguaTCDTgd0vaH1uGO51gA_4XWv_wrE4JxnjK65MLGEU0AKuLKaGkqUVzpCERfQhUTvmI_bn_sctxEO1lBmsZakZNTrvnWxpnJqcI0kgGqp8lBiRCE1m2bEvkZK29uBEo48f6lT6MzhCFaugn3boMmkTelCz8BBRss'); background-size: cover; background-position: center;">
+</div>
+<div class="layout-container flex h-full grow flex-col justify-center items-center relative z-10 px-4 py-10">
+<!-- Main Card Container -->
+<div class="glass-card w-full max-w-[520px] rounded-2xl p-8 sm:p-12 flex flex-col gap-8 shadow-2xl relative overflow-hidden">
+<!-- Decorative Top Glow -->
+<div class="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 rounded-full blur-[60px] pointer-events-none"></div>
+<div class="absolute -bottom-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-[60px] pointer-events-none"></div>
+<!-- Header Section -->
+<div class="flex flex-col items-center text-center gap-3">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-2 ring-1 ring-primary/30 shadow-[0_0_15px_rgba(48,232,94,0.15)]">
+<span class="text-4xl filter drop-shadow-md">🌱</span>
+</div>
+<h1 class="text-white text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight">
+                        Вход в систему
+                    </h1>
+<p class="text-[#93c8a0] text-base font-normal leading-normal">
+                        AI Soil Analysis Platform
+                    </p>
+</div>
+<!-- Form Section -->
+<form class="flex flex-col gap-5 w-full" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<label class="flex flex-col gap-2 group">
+<span class="text-white text-sm font-medium ml-1">Email</span>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#93c8a0]">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+</div>
+<input id="email" class="form-input flex w-full rounded-full border border-[#346540] bg-[#1a3220]/80 focus:border-primary focus:ring-1 focus:ring-primary h-12 pl-11 pr-4 text-white placeholder:text-[#93c8a0]/60 text-base transition-all duration-200" placeholder="name@company.com" type="email" required/>
+</div>
+</label>
+<!-- Password Field -->
+<label class="flex flex-col gap-2 group">
+<span class="text-white text-sm font-medium ml-1 flex justify-between">
+                            Пароль
+                            <a class="text-primary hover:text-primary-light text-xs font-normal transition-colors" href="#">Забыли пароль?</a>
+</span>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#93c8a0]">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</div>
+<input id="password" class="form-input flex w-full rounded-full border border-[#346540] bg-[#1a3220]/80 focus:border-primary focus:ring-1 focus:ring-primary h-12 pl-11 pr-4 text-white placeholder:text-[#93c8a0]/60 text-base transition-all duration-200" placeholder="••••••••" type="password" required/>
+</div>
+</label>
+<!-- Login Button -->
+<button id="loginBtn" type="submit" class="mt-4 flex w-full cursor-pointer items-center justify-center rounded-full h-12 px-5 bg-primary hover:bg-[#2bd455] text-[#112215] text-base font-bold leading-normal tracking-wide transition-all duration-300 transform hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(48,232,94,0.3)]">
+                        Войти
+                    </button>
+</form>
+<!-- Register Link -->
+<div class="flex flex-col items-center gap-4 mt-6">
+<p class="text-center text-white/60 text-sm">
+                        Нет аккаунта?
+                        <a class="text-primary hover:text-primary-light font-bold transition-colors ml-1" href="/register">Зарегистрироваться</a>
+                    </p>
+</div>
+</div>
+<!-- Simple Footer -->
+<div class="mt-8 text-[#54755c] text-sm font-medium">
+                © 2024 SoilAnalyzer. Все права защищены.
+            </div>
+</div>
+</div>
+
+<!-- Scripts -->
+<script>
+// Handle login form submission
+document.querySelector('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const loginBtn = document.getElementById('loginBtn');
+
+    // Disable button and show loading state
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Вход...';
+
+    try {
+        const response = await fetch('/api/v1/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || 'Ошибка входа');
+        }
+
+        // Save tokens
+        localStorage.setItem('access_token', data.access_token);
+        if (data.refresh_token) {
+            localStorage.setItem('refresh_token', data.refresh_token);
+        }
+
+        // Redirect to dashboard
+        window.location.href = '/dashboard';
+
+    } catch (error) {
+        alert(error.message || 'Ошибка при входе. Проверьте данные.');
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Войти';
+    }
+});
+</script>
+</body></html>

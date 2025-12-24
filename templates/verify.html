@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html class="dark" lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Подтверждение Email - SoilAnalyzer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "primary": "#30e85e",
+                "primary-hover": "#25c24d",
+                "background-dark": "#112115",
+            },
+            fontFamily: {
+                "display": ["Manrope", "sans-serif"]
+            }
+        }
+    }
+}
+</script>
+<style>
+.glass-card {
+    background: rgba(26, 44, 32, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.code-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+.code-input:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #30e85e;
+    outline: none;
+}
+</style>
+</head>
+<body class="bg-background-dark font-display text-white min-h-screen flex items-center justify-center p-4">
+
+<div class="w-full max-w-md">
+    <div class="glass-card rounded-2xl p-8 text-center">
+        <!-- Icon -->
+        <div class="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6">
+            <span class="material-symbols-outlined text-primary text-4xl">mark_email_read</span>
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-3xl font-bold mb-3">Подтверждение email</h1>
+        <p class="text-white/60 mb-8">
+            Мы отправили 6-значный код на<br/>
+            <span id="userEmail" class="text-white font-medium">ваш email</span>
+        </p>
+
+        <!-- Code Input Form -->
+        <form id="verifyForm" class="mb-6">
+            <div class="flex gap-2 justify-center mb-6">
+                <input class="code-input w-12 h-14 text-center rounded-xl text-2xl font-bold" type="text" maxlength="1" pattern="[0-9]" required autofocus/>
+                <input class="code-input w-12 h-14 text-center rounded-xl text-2xl font-bold" type="text" maxlength="1" pattern="[0-9]" required/>
+                <input class="code-input w-12 h-14 text-center rounded-xl text-2xl font-bold" type="text" maxlength="1" pattern="[0-9]" required/>
+                <input class="code-input w-12 h-14 text-center rounded-xl text-2xl font-bold" type="text" maxlength="1" pattern="[0-9]" required/>
+                <input class="code-input w-12 h-14 text-center rounded-xl text-2xl font-bold" type="text" maxlength="1" pattern="[0-9]" required/>
+                <input class="code-input w-12 h-14 text-center rounded-xl text-2xl font-bold" type="text" maxlength="1" pattern="[0-9]" required/>
+            </div>
+
+            <button id="verifyBtn" type="submit" class="w-full py-4 rounded-full bg-primary hover:bg-primary-hover text-background-dark font-bold text-lg transition-all shadow-lg shadow-primary/30">
+                Подтвердить
+            </button>
+        </form>
+
+        <!-- Resend Code -->
+        <div class="text-center">
+            <p class="text-white/50 text-sm mb-3">Не получили код?</p>
+            <button id="resendBtn" class="text-primary hover:text-primary-hover font-medium transition-colors">
+                Отправить повторно
+            </button>
+        </div>
+    </div>
+
+    <!-- Back to login -->
+    <div class="text-center mt-6">
+        <a href="/login" class="text-white/60 hover:text-white text-sm transition-colors">
+            ← Вернуться к входу
+        </a>
+    </div>
+</div>
+
+<script>
+let userEmail = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Get email from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    userEmail = urlParams.get('email') || 'ваш email';
+    document.getElementById('userEmail').textContent = userEmail;
+
+    // Auto-focus and navigation between inputs
+    const inputs = document.querySelectorAll('input[type="text"]');
+
+    inputs.forEach((input, index) => {
+        // Auto-advance on input
+        input.addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (!/^\d*$/.test(value)) {
+                e.target.value = '';
+                return;
+            }
+            if (value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        // Backspace navigation
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+
+        // Paste handling
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = e.clipboardData.getData('text');
+            const numbers = paste.match(/\d/g);
+            if (numbers) {
+                numbers.forEach((num, i) => {
+                    if (index + i < inputs.length) {
+                        inputs[index + i].value = num;
+                    }
+                });
+                const lastIndex = Math.min(index + numbers.length - 1, inputs.length - 1);
+                inputs[lastIndex].focus();
+            }
+        });
+    });
+});
+
+// Handle form submission
+document.getElementById('verifyForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const inputs = document.querySelectorAll('input[type="text"]');
+    const code = Array.from(inputs).map(input => input.value).join('');
+
+    if (code.length !== 6) {
+        alert('Введите все 6 цифр кода');
+        return;
+    }
+
+    const verifyBtn = document.getElementById('verifyBtn');
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = 'Проверка...';
+
+    try {
+        const response = await fetch('/api/v1/users/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: userEmail,
+                verify_code: code
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || 'Ошибка проверки');
+        }
+
+        alert('Email успешно подтвержден!');
+        window.location.href = '/login';
+
+    } catch (error) {
+        alert(error.message || 'Неверный код');
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = 'Подтвердить';
+    }
+});
+
+// Handle resend code
+document.getElementById('resendBtn').addEventListener('click', async () => {
+    const resendBtn = document.getElementById('resendBtn');
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Отправка...';
+
+    try {
+        const response = await fetch('/api/v1/users/resend-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: userEmail })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || 'Ошибка отправки');
+        }
+
+        alert('Код отправлен! Проверьте email.');
+
+        setTimeout(() => {
+            resendBtn.disabled = false;
+            resendBtn.textContent = 'Отправить повторно';
+        }, 60000);
+
+    } catch (error) {
+        alert(error.message || 'Не удалось отправить код');
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Отправить повторно';
+    }
+});
+</script>
+</body>
+</html>

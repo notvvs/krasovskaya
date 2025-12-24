@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoilAnalyzer - История анализов</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30e85e",
+                        "primary-dark": "#24472d",
+                        "secondary-dark": "#1a3322",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#112215",
+                        "text-dim": "#93c8a0",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(36, 71, 45, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(147, 200, 160, 0.1);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-slate-900 dark:text-white overflow-x-hidden font-display">
+<!-- Top Navbar -->
+<header class="sticky top-0 z-50 w-full border-b border-solid border-b-[#24472d] bg-[#112215]/95 backdrop-blur-md">
+<div class="px-4 md:px-10 py-3 flex items-center justify-between whitespace-nowrap">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined text-[32px]">eco</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">SoilAnalyzer</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-text-dim hover:text-white transition-colors text-sm font-medium leading-normal" href="/dashboard">Dashboard</a>
+<a class="text-text-dim hover:text-white transition-colors text-sm font-medium leading-normal" href="/analyze">Analyze</a>
+<a class="text-white text-sm font-medium leading-normal" href="/history">History</a>
+<a class="text-text-dim hover:text-white transition-colors text-sm font-medium leading-normal" href="/profile">Profile</a>
+<a class="text-text-dim hover:text-white transition-colors text-sm font-medium leading-normal" href="/about">About</a>
+</div>
+<button onclick="window.location.href='/analyze'" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-primary text-[#112215] hover:bg-white transition-colors text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">New Analysis</span>
+</button>
+<button onclick="logout()" class="flex items-center gap-2 px-4 py-2 text-text-dim hover:text-white transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+</button>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-1 flex flex-col items-center w-full px-4 py-8 md:px-10 lg:px-40">
+<div class="flex flex-col max-w-[1200px] w-full gap-8">
+<!-- Page Header -->
+<div class="flex flex-wrap justify-between items-end gap-4 pb-2 border-b border-[#24472d]/50">
+<div class="flex flex-col gap-2">
+<h1 class="text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">История анализов</h1>
+<p class="text-text-dim text-base font-normal leading-normal">Архив всех проведенных анализов почвы, отчетов и рекомендаций.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-full h-10 px-4 bg-[#24472d] hover:bg-[#2f5d3b] transition-colors text-white text-sm font-bold gap-2">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span class="truncate">Export CSV</span>
+</button>
+</div>
+</div>
+<!-- Controls: Search, Filters, View Toggle -->
+<div class="flex flex-col gap-6">
+<!-- Search and Filters Row -->
+<div class="flex flex-col lg:flex-row gap-4 justify-between">
+<!-- Search Bar -->
+<div class="flex-1 min-w-[300px]">
+<label class="flex w-full h-12">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full glass-panel group focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+<div class="text-text-dim flex items-center justify-center pl-4 pr-2">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="flex w-full min-w-0 flex-1 resize-none overflow-hidden bg-transparent text-white focus:outline-0 border-none h-full placeholder:text-text-dim/70 px-2 text-base font-normal leading-normal" placeholder="Поиск по ID, полю или культуре..."/>
+</div>
+</label>
+</div>
+<!-- Filter Chips & View Toggle -->
+<div class="flex flex-wrap items-center gap-3 justify-between lg:justify-end flex-1">
+<div class="flex gap-2 overflow-x-auto scrollbar-hide pb-2 lg:pb-0">
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary text-[#112215] px-4 hover:brightness-110 transition-all font-bold">
+<span class="text-sm">Все типы</span>
+<span class="material-symbols-outlined text-[20px]">arrow_drop_down</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#24472d] hover:bg-[#2f5d3b] text-white px-4 transition-all">
+<span class="text-sm font-medium">Статус</span>
+<span class="material-symbols-outlined text-[20px]">arrow_drop_down</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#24472d] hover:bg-[#2f5d3b] text-white px-4 transition-all">
+<span class="text-sm font-medium">Дата</span>
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+</button>
+</div>
+<div class="h-8 w-px bg-[#24472d] mx-1 hidden sm:block"></div>
+<!-- View Toggle -->
+<div class="glass-panel p-1 rounded-full flex gap-1">
+<button class="size-9 rounded-full bg-[#24472d] text-primary flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="size-9 rounded-full hover:bg-[#24472d] text-text-dim hover:text-white flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined">view_list</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Active Filters & Stats -->
+<div class="flex justify-between items-center text-sm">
+<div class="flex gap-2 items-center">
+<span class="text-text-dim">Найдено: <span class="text-white font-bold">24 анализа</span></span>
+<span class="text-[#24472d]">•</span>
+<button class="text-primary hover:underline text-xs">Очистить фильтры</button>
+</div>
+</div>
+</div>
+<!-- Content Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 (Processing) -->
+<div class="group relative flex flex-col rounded-2xl bg-[#1a3322] border border-[#24472d] hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-[0_0_20px_rgba(48,232,94,0.1)]">
+<div class="relative h-48 w-full overflow-hidden">
+<div class="absolute top-3 left-3 z-10">
+<span class="inline-flex items-center gap-1.5 rounded-full bg-yellow-500/20 px-3 py-1 text-xs font-bold text-yellow-400 backdrop-blur-md border border-yellow-500/30">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+</span>
+                                Обработка
+                            </span>
+</div>
+<div class="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Close up of dark rich soil texture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDRMHsnhmcGCvcw4Ux9xgr6IKvezajPYd2G3s-yWJqcUKwJD-z0GbPaCn16w_Jv4a-xNu5hjeWcbylfTq9JjnK8tf-8U7sHlaqZPFKd5v2iiA8H1w1BPJABhbQkwrnt_JysAchYDrtIFaffa_w1HoCiFtDGD9_Mv9s2j0pbT5nSCw6BszaJZjdpLz-vLWZmreMPyqJGARyXZ_LA9tRMIQdnfv_p8-me_SeyxlyUA_vS58MpM8H0AiE5jvz8CMUHOfopGOLcbAzryKs");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-[#1a3322] to-transparent opacity-80"></div>
+</div>
+<div class="flex flex-1 flex-col p-5 gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-bold text-white mb-1">Поле Северное #4</h3>
+<p class="text-text-dim text-xs">ID: SA-2023-892 • 2 мин назад</p>
+</div>
+<button class="text-text-dim hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="h-px bg-[#24472d] w-full"></div>
+<div class="flex flex-col gap-2">
+<p class="text-xs text-text-dim uppercase tracking-wider font-semibold">Ожидаемые метрики</p>
+<div class="flex gap-2">
+<div class="h-2 w-full bg-[#24472d] rounded-full overflow-hidden">
+<div class="h-full bg-primary/50 w-2/3 animate-pulse rounded-full"></div>
+</div>
+</div>
+<p class="text-xs text-right text-primary/80">65% Завершено</p>
+</div>
+</div>
+</div>
+<!-- Card 2 (Completed - High Score) -->
+<div class="group relative flex flex-col rounded-2xl bg-[#1a3322] border border-[#24472d] hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-[0_0_20px_rgba(48,232,94,0.1)]">
+<div class="relative h-48 w-full overflow-hidden">
+<div class="absolute top-3 left-3 z-10 flex gap-2">
+<span class="inline-flex items-center gap-1 rounded-full bg-primary/20 px-3 py-1 text-xs font-bold text-primary backdrop-blur-md border border-primary/30">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                Готов
+                            </span>
+<span class="inline-flex items-center rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+                                Чернозем
+                            </span>
+</div>
+<div class="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Hand holding fertile soil" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD-FnkY6InKbBTQ3LrbIOI1ZptUbJIXzP7hg6yDOEGBi09jEievlGv1I1iLMlH7Y2zfa3t7iS7xkDe4os5rg6zMlisf_z6Mv8SSzp2JnynMnctbR8ig6RZJSmtv6BKCDht-opTMaxYQtYw6BriH5Vw8E5O9lSxn-qpQNLDdSKFOloU48jMkjj5dBTuQDraQrouvB8cyBL8vxxx6UZN7sQ-12TmCg5PjNw0DsbXVmtSA851GBzfNCiPkVSXtwt9WSu6Uk5ZPoY5wq2M");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-[#1a3322] to-transparent opacity-80"></div>
+</div>
+<div class="flex flex-1 flex-col p-5 gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-bold text-white mb-1">Участок у реки</h3>
+<p class="text-text-dim text-xs">ID: SA-2023-841 • 24 Окт 2023</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-2xl font-black text-primary">9.4</span>
+<span class="text-[10px] text-text-dim uppercase">Health Score</span>
+</div>
+</div>
+<!-- Mini Stats Grid -->
+<div class="grid grid-cols-3 gap-2 py-1">
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">pH</span>
+<span class="text-sm font-bold text-white">6.8</span>
+</div>
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">Азот</span>
+<span class="text-sm font-bold text-primary">Выс</span>
+</div>
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">Влага</span>
+<span class="text-sm font-bold text-white">22%</span>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<button class="w-full flex items-center justify-center h-9 rounded-lg border border-primary/30 text-primary text-sm font-semibold hover:bg-primary hover:text-[#112215] transition-all">
+                                Открыть отчет
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 3 (Attention Needed) -->
+<div class="group relative flex flex-col rounded-2xl bg-[#1a3322] border border-[#24472d] hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-[0_0_20px_rgba(48,232,94,0.1)]">
+<div class="relative h-48 w-full overflow-hidden">
+<div class="absolute top-3 left-3 z-10 flex gap-2">
+<span class="inline-flex items-center gap-1 rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold text-red-400 backdrop-blur-md border border-red-500/30">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                                Внимание
+                            </span>
+<span class="inline-flex items-center rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+                                Глина
+                            </span>
+</div>
+<div class="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Cracked dry earth texture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA6kg1hrBeeZ6AfSGF9sRmGCmcd7G94kFKuuZDYOvogznD68CUPHm_ALuMtamBUoAeyXkV7ab9Fch5gAeExvKz675ZomfC1YGF67-pQQtaOxkVQO32y4TUhooDYRcruBRDr-3XDjdjeNf_Dtc8aePs43zjbQAHSPYeh5eUwOGLgdj35igxGKB5eWcL6X3_kBPsDyEZ0heQievF8sNcm-NcQ636A4JxNnPWYGAJ62vIlt_Gar_90JR8RMAhmdLIRB3YIU5xanhY5a4U");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-[#1a3322] to-transparent opacity-80"></div>
+</div>
+<div class="flex flex-1 flex-col p-5 gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-bold text-white mb-1">Сектор Б-12</h3>
+<p class="text-text-dim text-xs">ID: SA-2023-810 • 20 Окт 2023</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-2xl font-black text-red-400">4.2</span>
+<span class="text-[10px] text-text-dim uppercase">Health Score</span>
+</div>
+</div>
+<!-- Mini Stats Grid -->
+<div class="grid grid-cols-3 gap-2 py-1">
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">pH</span>
+<span class="text-sm font-bold text-red-400">4.5</span>
+</div>
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">Азот</span>
+<span class="text-sm font-bold text-white">Низ</span>
+</div>
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">Влага</span>
+<span class="text-sm font-bold text-red-400">5%</span>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<button class="w-full flex items-center justify-center h-9 rounded-lg border border-primary/30 text-primary text-sm font-semibold hover:bg-primary hover:text-[#112215] transition-all">
+                                Открыть отчет
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 4 (Standard) -->
+<div class="group relative flex flex-col rounded-2xl bg-[#1a3322] border border-[#24472d] hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-[0_0_20px_rgba(48,232,94,0.1)]">
+<div class="relative h-48 w-full overflow-hidden">
+<div class="absolute top-3 left-3 z-10 flex gap-2">
+<span class="inline-flex items-center gap-1 rounded-full bg-primary/20 px-3 py-1 text-xs font-bold text-primary backdrop-blur-md border border-primary/30">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                Готов
+                            </span>
+<span class="inline-flex items-center rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+                                Суглинок
+                            </span>
+</div>
+<div class="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Agricultural field view from top" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCRI-D-C2f2IxsgJPaok3scrEHQ2GGek-OvLaq55DudM-KS1euhaZogB-2rLJ_gGpl7e6PCpLEzJdFwnDR6rultOGB-S6U9fGBU8QxzyleKVL2Um1lcMuI9USePlNP2S3NNuW6Qm_K-7Q7rfrT36hxXgBTDlqodAJYMIHa4nwn8wo2avHK5Nsx7MnJTjnnk5rHSTjQ2-aOnDXby7J_AI40OcLg2w5LBqdDf8GIbzLZ2tMSePSt4c4rWewj83phOS8iVNfKzvlT_jsU");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-[#1a3322] to-transparent opacity-80"></div>
+</div>
+<div class="flex flex-1 flex-col p-5 gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-bold text-white mb-1">Восточные Сады</h3>
+<p class="text-text-dim text-xs">ID: SA-2023-795 • 15 Окт 2023</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-2xl font-black text-primary">8.1</span>
+<span class="text-[10px] text-text-dim uppercase">Health Score</span>
+</div>
+</div>
+<!-- Mini Stats Grid -->
+<div class="grid grid-cols-3 gap-2 py-1">
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">pH</span>
+<span class="text-sm font-bold text-white">7.1</span>
+</div>
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">Азот</span>
+<span class="text-sm font-bold text-white">Норм</span>
+</div>
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">Влага</span>
+<span class="text-sm font-bold text-white">18%</span>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<button class="w-full flex items-center justify-center h-9 rounded-lg border border-primary/30 text-primary text-sm font-semibold hover:bg-primary hover:text-[#112215] transition-all">
+                                Открыть отчет
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 5 (Standard) -->
+<div class="group relative flex flex-col rounded-2xl bg-[#1a3322] border border-[#24472d] hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-[0_0_20px_rgba(48,232,94,0.1)]">
+<div class="relative h-48 w-full overflow-hidden">
+<div class="absolute top-3 left-3 z-10 flex gap-2">
+<span class="inline-flex items-center gap-1 rounded-full bg-primary/20 px-3 py-1 text-xs font-bold text-primary backdrop-blur-md border border-primary/30">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                Готов
+                            </span>
+<span class="inline-flex items-center rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+                                Песок
+                            </span>
+</div>
+<div class="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Sandy soil close up" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDGtHA8Idlz09ejSRN41E_Fx67zblfAB31xY1y8pHDpL-DS2lYccS43_sueFoliBxu0vWyJF4cizApNq6pbOYFCaK0Png2zRiTaxxwbPOmcdcd6Z6Ljv0fkHo8JVNR8fsa_z4S-g4SWOx9BAZSbNpS5TIjgU-vcsrvTonVqsKu2pWtPirENLeooR23LfLPohdm7zmvy4sqGphBedY2If7B_DGvsy--UMgDZvJvxnMIesH_WosHIi4yHcW1SKxsbvZbjOHNfYVtketk");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-[#1a3322] to-transparent opacity-80"></div>
+</div>
+<div class="flex flex-1 flex-col p-5 gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-bold text-white mb-1">Виноградник Юг</h3>
+<p class="text-text-dim text-xs">ID: SA-2023-750 • 12 Окт 2023</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-2xl font-black text-white">7.5</span>
+<span class="text-[10px] text-text-dim uppercase">Health Score</span>
+</div>
+</div>
+<!-- Mini Stats Grid -->
+<div class="grid grid-cols-3 gap-2 py-1">
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">pH</span>
+<span class="text-sm font-bold text-white">6.2</span>
+</div>
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">Азот</span>
+<span class="text-sm font-bold text-white">Норм</span>
+</div>
+<div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+<span class="text-[10px] text-text-dim">Влага</span>
+<span class="text-sm font-bold text-white">12%</span>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<button class="w-full flex items-center justify-center h-9 rounded-lg border border-primary/30 text-primary text-sm font-semibold hover:bg-primary hover:text-[#112215] transition-all">
+                                Открыть отчет
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 6 (Processing) -->
+<div class="group relative flex flex-col rounded-2xl bg-[#1a3322] border border-[#24472d] hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-[0_0_20px_rgba(48,232,94,0.1)]">
+<div class="relative h-48 w-full overflow-hidden bg-[#112215] flex items-center justify-center">
+<!-- Skeleton Image Placeholder -->
+<div class="flex flex-col items-center gap-2 text-text-dim/50">
+<span class="material-symbols-outlined text-[48px] animate-pulse">image</span>
+<span class="text-xs">Загрузка изображения...</span>
+</div>
+</div>
+<div class="flex flex-1 flex-col p-5 gap-4">
+<div class="flex justify-between items-start">
+<div class="w-full">
+<div class="h-6 w-2/3 bg-[#24472d] rounded animate-pulse mb-2"></div>
+<div class="h-3 w-1/3 bg-[#24472d] rounded animate-pulse"></div>
+</div>
+</div>
+<div class="h-px bg-[#24472d] w-full"></div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<div class="h-3 w-20 bg-[#24472d] rounded animate-pulse"></div>
+<div class="h-3 w-8 bg-[#24472d] rounded animate-pulse"></div>
+</div>
+<div class="h-2 w-full bg-[#24472d] rounded-full overflow-hidden">
+<div class="h-full bg-primary/30 w-1/4 animate-pulse rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex justify-center pt-8 pb-12">
+<button class="flex items-center gap-2 px-6 h-12 rounded-full border border-[#24472d] text-white hover:border-primary hover:text-primary transition-all font-medium bg-[#1a3322]">
+<span class="material-symbols-outlined animate-spin">refresh</span>
+<span>Загрузить еще</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Simple Footer -->
+<footer class="w-full border-t border-[#24472d] py-6 text-center text-text-dim text-sm">
+<p>© 2024 SoilAnalyzer. Professional Soil Analysis Platform.</p>
+</footer>
+
+<!-- Scripts -->
+<script src="/static/js/navigation.js"></script>
+<script>
+// Load soil analysis history from API
+async function loadAnalysisHistory() {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/v1/soil/history?limit=50&offset=0', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to load history');
+        }
+
+        const data = await response.json();
+        renderAnalysisCards(data.analyses || []);
+    } catch (error) {
+        console.error('Error loading analysis history:', error);
+    }
+}
+
+// Render analysis cards
+function renderAnalysisCards(analyses) {
+    const container = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3');
+    if (!container || analyses.length === 0) return;
+
+    // Clear sample cards (keep first 3 as templates if no data)
+    if (analyses.length > 0) {
+        container.innerHTML = '';
+    }
+
+    analyses.forEach(analysis => {
+        const card = createAnalysisCard(analysis);
+        container.appendChild(card);
+    });
+}
+
+// Create analysis card element
+function createAnalysisCard(analysis) {
+    const card = document.createElement('div');
+    card.className = 'group relative flex flex-col rounded-2xl bg-[#1a3322] border border-[#24472d] hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-[0_0_20px_rgba(48,232,94,0.1)]';
+
+    const date = new Date(analysis.created_at).toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    });
+
+    card.innerHTML = `
+        <div class="relative h-48 w-full overflow-hidden">
+            <div class="absolute top-3 left-3 z-10 flex gap-2">
+                <span class="inline-flex items-center gap-1 rounded-full bg-primary/20 px-3 py-1 text-xs font-bold text-primary backdrop-blur-md border border-primary/30">
+                    <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                    Готов
+                </span>
+                <span class="inline-flex items-center rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+                    ${analysis.soil_type || 'Неизвестно'}
+                </span>
+            </div>
+            <div class="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style='background-image: url("${analysis.image_path || '/static/images/default-soil.jpg'}");'></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#1a3322] to-transparent opacity-80"></div>
+        </div>
+        <div class="flex flex-1 flex-col p-5 gap-4">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-1">Анализ #${analysis.id}</h3>
+                    <p class="text-text-dim text-xs">${date}</p>
+                </div>
+                <div class="flex flex-col items-end">
+                    <span class="text-2xl font-black text-primary">${analysis.confidence ? (analysis.confidence * 10).toFixed(1) : 'N/A'}</span>
+                    <span class="text-[10px] text-text-dim uppercase">Confidence</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 py-1">
+                <div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+                    <span class="text-[10px] text-text-dim">Тип</span>
+                    <span class="text-sm font-bold text-white">${analysis.soil_type || 'N/A'}</span>
+                </div>
+                <div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+                    <span class="text-[10px] text-text-dim">ID</span>
+                    <span class="text-sm font-bold text-primary">${analysis.id}</span>
+                </div>
+                <div class="flex flex-col items-center bg-[#24472d]/50 p-2 rounded-lg">
+                    <span class="text-[10px] text-text-dim">Score</span>
+                    <span class="text-sm font-bold text-white">${analysis.confidence ? (analysis.confidence * 100).toFixed(0) + '%' : 'N/A'}</span>
+                </div>
+            </div>
+            <div class="mt-auto pt-2">
+                <button onclick="viewAnalysisDetails(${analysis.id})" class="w-full flex items-center justify-center h-9 rounded-lg border border-primary/30 text-primary text-sm font-semibold hover:bg-primary hover:text-[#112215] transition-all">
+                    Открыть отчет
+                </button>
+            </div>
+        </div>
+    `;
+
+    return card;
+}
+
+// View analysis details
+function viewAnalysisDetails(analysisId) {
+    // TODO: Navigate to analysis detail page or show modal
+    console.log('View analysis:', analysisId);
+}
+
+// Load data when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    loadAnalysisHistory();
+});
+</script>
+</body></html>

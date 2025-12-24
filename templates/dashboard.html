@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoilAnalyzer Dashboard</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30e85e", // Neon Green
+                        "primary-dark": "#24ad46",
+                        "secondary": "#2d5f30", // Dark Green
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#112115", // Deep Dark Green/Black
+                        "glass-border": "rgba(255, 255, 255, 0.08)",
+                        "glass-bg": "rgba(30, 50, 35, 0.4)",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "full": "9999px"
+                    },
+                    backgroundImage: {
+                        'subtle-pattern': "url('data:image/svg+xml,%3Csvg width=\\'60\\' height=\\'60\\' viewBox=\\'0 0 60 60\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Cg fill=\\'none\\' fill-rule=\\'evenodd\\'%3E%3Cg fill=\\'%2330e85e\\' fill-opacity=\\'0.03\\'%3E%3Cpath d=\\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Scrollbar for Webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112115;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2d5f30;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #30e85e;
+        }
+
+        .glass-panel {
+            background: rgba(20, 40, 25, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card {
+            background: rgba(45, 95, 48, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(48, 232, 94, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden selection:bg-primary selection:text-background-dark">
+<div class="flex h-screen w-full bg-subtle-pattern">
+<!-- Sidebar Navigation -->
+<aside class="hidden lg:flex w-[280px] flex-col h-full border-r border-[#2d5f30]/30 bg-[#112215]/95 backdrop-blur-md p-6 justify-between flex-shrink-0 z-20">
+<div class="flex flex-col gap-8">
+<!-- Logo -->
+<div class="flex items-center gap-3">
+<div class="relative flex items-center justify-center size-10 rounded-full bg-primary/10 border border-primary/20 text-primary">
+<span class="material-symbols-outlined">eco</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-none tracking-tight">SoilAnalyzer</h1>
+<p class="text-[#93c8a0] text-xs font-medium uppercase tracking-wider mt-1">AI Soil Analysis</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-full bg-primary text-background-dark transition-all shadow-[0_0_15px_rgba(48,232,94,0.3)]" href="/dashboard">
+<span class="material-symbols-outlined filled">dashboard</span>
+<span class="text-sm font-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-full text-[#93c8a0] hover:bg-[#2d5f30]/40 hover:text-white transition-colors group" href="/analyze">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">science</span>
+<span class="text-sm font-medium">Analyze</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-full text-[#93c8a0] hover:bg-[#2d5f30]/40 hover:text-white transition-colors group" href="/history">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">history</span>
+<span class="text-sm font-medium">History</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-full text-[#93c8a0] hover:bg-[#2d5f30]/40 hover:text-white transition-colors group" href="/profile">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">account_circle</span>
+<span class="text-sm font-medium">Profile</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-full text-[#93c8a0] hover:bg-[#2d5f30]/40 hover:text-white transition-colors group" href="/about">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">info</span>
+<span class="text-sm font-medium">About</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Actions -->
+<div class="flex flex-col gap-4">
+<div class="glass-card p-4 rounded-xl flex items-center gap-3">
+<div class="bg-center bg-cover rounded-full size-10 border border-white/10 bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+<div class="flex flex-col overflow-hidden">
+<p id="userEmail" class="text-white text-sm font-bold truncate">User</p>
+<p class="text-[#93c8a0] text-xs truncate">Analyst</p>
+</div>
+</div>
+<button onclick="logout()" class="flex items-center justify-center gap-2 w-full h-12 rounded-full border border-[#2d5f30] text-[#93c8a0] hover:bg-[#2d5f30] hover:text-white transition-all text-sm font-bold">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span>Sign Out</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 h-full overflow-y-auto relative scroll-smooth">
+<!-- Decorative gradient blur behind content -->
+<div class="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-[#1a3a23] to-transparent opacity-40 pointer-events-none z-0"></div>
+<div class="relative z-10 layout-container flex flex-col p-6 md:p-8 lg:p-12 max-w-[1600px] mx-auto gap-8">
+<!-- Page Header -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
+<div class="flex flex-col gap-2">
+<h1 class="text-white text-3xl md:text-4xl font-black leading-tight tracking-tight">
+                            Добро пожаловать в SoilAnalyzer
+                        </h1>
+<p class="text-[#93c8a0] text-base font-normal max-w-xl">
+                            Обзор состояния ваших полей и быстрый анализ почвы с помощью AI.
+                        </p>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-[#1a3220] border border-[#2d5f30]">
+<span class="material-symbols-outlined text-primary text-sm">calendar_today</span>
+<span class="text-[#93c8a0] text-sm font-medium">Сегодня, 24 Окт 2023</span>
+</div>
+</header>
+<!-- Stats Overview -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Stat Card 1 -->
+<div class="glass-panel p-6 rounded-2xl flex flex-col gap-3 group hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-2 rounded-lg bg-[#2d5f30]/50 text-white">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<span class="text-primary text-sm font-bold bg-primary/10 px-2 py-1 rounded-full">+5%</span>
+</div>
+<div>
+<p class="text-[#93c8a0] text-sm font-medium uppercase tracking-wider">Всего анализов</p>
+<p class="text-white text-3xl font-bold mt-1">124</p>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-panel p-6 rounded-2xl flex flex-col gap-3 group hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-2 rounded-lg bg-[#2d5f30]/50 text-white">
+<span class="material-symbols-outlined">health_and_safety</span>
+</div>
+<span class="text-primary text-sm font-bold bg-primary/10 px-2 py-1 rounded-full">+2%</span>
+</div>
+<div>
+<p class="text-[#93c8a0] text-sm font-medium uppercase tracking-wider">Здоровье почвы</p>
+<p class="text-white text-3xl font-bold mt-1">88%</p>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-panel p-6 rounded-2xl flex flex-col gap-3 group hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-2 rounded-lg bg-[#2d5f30]/50 text-white">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<span class="text-gray-400 text-sm font-bold bg-white/5 px-2 py-1 rounded-full">0%</span>
+</div>
+<div>
+<p class="text-[#93c8a0] text-sm font-medium uppercase tracking-wider">Проблемы</p>
+<p class="text-white text-3xl font-bold mt-1">12</p>
+</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="glass-panel p-6 rounded-2xl flex flex-col gap-3 group hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start">
+<div class="p-2 rounded-lg bg-[#2d5f30]/50 text-white">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<span class="text-gray-400 text-sm font-bold bg-white/5 px-2 py-1 rounded-full">New</span>
+</div>
+<div>
+<p class="text-[#93c8a0] text-sm font-medium uppercase tracking-wider">В обработке</p>
+<p class="text-white text-3xl font-bold mt-1">3</p>
+</div>
+</div>
+</section>
+<!-- Main Grid: Quick Analysis & Recent List -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 pb-8">
+<!-- Left Column: Quick Analysis (Approx 40%) -->
+<div class="xl:col-span-5 flex flex-col">
+<div class="glass-panel h-full rounded-2xl p-8 flex flex-col gap-6 relative overflow-hidden">
+<!-- Background accent -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full filter blur-[100px] opacity-10 pointer-events-none"></div>
+<div class="flex flex-col gap-2 z-10">
+<h2 class="text-white text-2xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">add_a_photo</span>
+                                    Быстрый анализ
+                                </h2>
+<p class="text-[#93c8a0] text-sm">Загрузите фото почвы, чтобы получить мгновенный отчет AI.</p>
+</div>
+<!-- Upload Zone -->
+<label class="flex-1 flex flex-col items-center justify-center w-full min-h-[280px] border-2 border-dashed border-[#2d5f30] hover:border-primary hover:bg-[#2d5f30]/20 rounded-xl cursor-pointer transition-all group bg-[#112115]/50 z-10">
+<div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+<div class="mb-4 text-gray-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[48px]">cloud_upload</span>
+</div>
+<p class="mb-2 text-sm text-gray-300"><span class="font-bold text-primary">Нажмите для загрузки</span> или перетащите файл</p>
+<p class="text-xs text-[#93c8a0]">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+</div>
+<input class="hidden" id="dropzone-file" type="file"/>
+</label>
+<!-- Action Button -->
+<button class="w-full h-12 bg-primary hover:bg-primary-dark text-[#112215] font-bold rounded-full shadow-[0_0_20px_rgba(48,232,94,0.4)] hover:shadow-[0_0_30px_rgba(48,232,94,0.6)] transition-all flex items-center justify-center gap-2 z-10">
+<span>Анализировать почву</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Recent Analyses (Approx 60%) -->
+<div class="xl:col-span-7 flex flex-col">
+<div class="glass-panel h-full rounded-2xl p-0 flex flex-col overflow-hidden">
+<div class="p-6 border-b border-[#2d5f30]/30 flex justify-between items-center">
+<h2 class="text-white text-xl font-bold">Недавние анализы</h2>
+<button class="text-primary text-sm font-bold hover:underline">Показать все</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-[#1a3220]/50 text-[#93c8a0] uppercase text-xs font-semibold tracking-wider">
+<tr>
+<th class="px-6 py-4">Фото</th>
+<th class="px-6 py-4">ID / Дата</th>
+<th class="px-6 py-4">Статус</th>
+<th class="px-6 py-4">Результат</th>
+<th class="px-6 py-4 text-right">Действие</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#2d5f30]/30">
+<tr class="hover:bg-[#2d5f30]/20 transition-colors">
+<td class="px-6 py-4">
+<div class="size-12 rounded-lg bg-gray-700 overflow-hidden border border-[#2d5f30]">
+<img alt="Soil sample close up" class="w-full h-full object-cover" data-alt="Close up texture of soil sample #1024" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBd6tW-pOLkYOxpFfb4JK_wRJ96r1JvtNezOZpBUrbI-b8Zy7eBbBLVw8F-IHqUrYL22wh6tQ0D3-bzhAPJsY0iPIQ8RsP71hEFxj3WOSZsD35sMoGjZD1VaONZMUd52uztOLsryS9ktl88r9ePVX5h4i4wnXRCtm9fRL9W7nzpE4SFKiPqO0MhyqkZmBf9CPbVhBj5JRh-XAXm1aCJnLiC07VwVXgZAdXDganKhUrYEzwOAaAAoMrFgG71cep3NvGwuVyqQffmIVA"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-white font-bold">#1024</span>
+<span class="text-[#93c8a0] text-xs">12 Окт 2023</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#2d5f30] text-white border border-[#346540]">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-2 animate-pulse"></span>
+                                                    Completed
+                                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-primary font-bold">Здорова</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-[#93c8a0] hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-[#2d5f30]/20 transition-colors">
+<td class="px-6 py-4">
+<div class="size-12 rounded-lg bg-gray-700 overflow-hidden border border-[#2d5f30]">
+<img alt="Dry cracked earth sample" class="w-full h-full object-cover" data-alt="Dry cracked soil sample #1023" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCES88a3D7KwiS0kOkxzB77VW5f6iDN7GLbtAIxF8eMoDm7ua7xDZfcx5qozcRfmaR6yb5JUiXW1lWunxy3WdO2xIuCUNHbC5FyJZXaTygr-18HIfWQLhJQ1uGpujd3uHtggT1vx4HJ67Q3ReZ-yy1z_eM2unJgIQjS54uoasXzIOB0jR8qcbMNbkxVCo82IOdr22SKndXvypvmMGlM_YaiA_HSkeY1icn82BP_G82gcJNq2jjYNevHFPGgWB9GQxswHK-Ns-gGSeE"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-white font-bold">#1023</span>
+<span class="text-[#93c8a0] text-xs">11 Окт 2023</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#2d5f30] text-white border border-[#346540]">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-2"></span>
+                                                    Completed
+                                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-yellow-400 font-bold">Низкий Азот</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-[#93c8a0] hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-[#2d5f30]/20 transition-colors">
+<td class="px-6 py-4">
+<div class="size-12 rounded-lg bg-gray-700 overflow-hidden border border-[#2d5f30]">
+<div class="w-full h-full bg-[#112115] flex items-center justify-center" data-alt="Placeholder for processing image">
+<span class="material-symbols-outlined text-[#2d5f30]">hourglass_empty</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-white font-bold">#1022</span>
+<span class="text-[#93c8a0] text-xs">10 Окт 2023</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-900/30 text-yellow-500 border border-yellow-800/50">
+<span class="material-symbols-outlined text-[14px] mr-1 animate-spin">sync</span>
+                                                    Processing
+                                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-gray-500">--</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-gray-600 cursor-not-allowed bg-white/5 p-2 rounded-full">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-[#2d5f30]/20 transition-colors">
+<td class="px-6 py-4">
+<div class="size-12 rounded-lg bg-gray-700 overflow-hidden border border-[#2d5f30]">
+<img alt="Dark rich soil" class="w-full h-full object-cover" data-alt="Dark nutrient rich soil sample #1021" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAqJria6p96-O8cEy6U-fUGuU2Xg9H8dS_amF_OddN2oW2p0PymVNbcRcQQrWFEeSz45ag-ZyrVrmHZHb6_xlfzULskbjP8_K8xCbvauaHxxd3lKe5Q7Ni9TGw73G0hagYhZBb_Fjh4wxy3J9lt-2E_KD2UWP8jO6_mvbr2f0uXUol_GeUhedQAEnkOTvOpX2G3EHetlMqXLJxQbCoHdKifMtDfiQUr4dqxovDj0oQneS9msgTIx25rxC3q6iCE3EXxInxHNfmZps"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-white font-bold">#1021</span>
+<span class="text-[#93c8a0] text-xs">09 Окт 2023</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#2d5f30] text-white border border-[#346540]">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-2"></span>
+                                                    Completed
+                                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-red-400 font-bold">Критично</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-[#93c8a0] hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<!-- Scripts -->
+<script src="/static/js/navigation.js"></script>
+<script>
+let selectedFile = null;
+
+// Load user email from token
+function loadUserData() {
+    const user = getUserFromToken();
+    if (user && user.email) {
+        document.getElementById('userEmail').textContent = user.email;
+    }
+}
+
+// Load dashboard stats
+async function loadStats() {
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
+
+    try {
+        const response = await fetch('/api/v1/soil/stats', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) throw new Error('Failed to load stats');
+
+        const data = await response.json();
+        updateStatsUI(data);
+    } catch (error) {
+        console.error('Error loading stats:', error);
+    }
+}
+
+// Update stats UI
+function updateStatsUI(data) {
+    // Update total analyses
+    const totalElement = document.querySelector('.glass-panel:nth-child(1) .text-3xl');
+    if (totalElement && data.total_analyses !== undefined) {
+        totalElement.textContent = data.total_analyses;
+    }
+}
+
+// Load recent analyses
+async function loadRecentAnalyses() {
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
+
+    try {
+        const response = await fetch('/api/v1/soil/history?limit=4&offset=0', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) throw new Error('Failed to load recent analyses');
+
+        const data = await response.json();
+        updateRecentAnalysesUI(data.analyses || []);
+    } catch (error) {
+        console.error('Error loading recent analyses:', error);
+    }
+}
+
+// Update recent analyses table
+function updateRecentAnalysesUI(analyses) {
+    const tbody = document.querySelector('tbody');
+    if (!tbody || analyses.length === 0) return;
+
+    tbody.innerHTML = '';
+
+    analyses.forEach(analysis => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-[#2d5f30]/20 transition-colors';
+
+        const date = new Date(analysis.created_at).toLocaleDateString('ru-RU', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+
+        tr.innerHTML = `
+            <td class="px-6 py-4">
+                <div class="size-12 rounded-lg bg-gray-700 overflow-hidden border border-[#2d5f30] bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary">eco</span>
+                </div>
+            </td>
+            <td class="px-6 py-4">
+                <div class="flex flex-col">
+                    <span class="text-white font-bold">#${analysis.id}</span>
+                    <span class="text-[#93c8a0] text-xs">${date}</span>
+                </div>
+            </td>
+            <td class="px-6 py-4">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#2d5f30] text-white border border-[#346540]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary mr-2"></span>
+                    Completed
+                </span>
+            </td>
+            <td class="px-6 py-4">
+                <span class="text-primary font-bold">${analysis.soil_type || 'N/A'}</span>
+            </td>
+            <td class="px-6 py-4 text-right">
+                <button class="text-[#93c8a0] hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+                    <span class="material-symbols-outlined text-[20px]">visibility</span>
+                </button>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+// Quick Analysis functionality
+async function quickAnalyze() {
+    if (!selectedFile) {
+        alert('Пожалуйста, выберите файл для анализа');
+        return;
+    }
+
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+
+    const analyzeBtn = document.querySelector('.glass-panel button');
+    const originalText = analyzeBtn.innerHTML;
+
+    analyzeBtn.disabled = true;
+    analyzeBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">hourglass_empty</span><span>Анализируем...</span>';
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+        const response = await fetch('/api/v1/soil/analyze', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка анализа');
+        }
+
+        const data = await response.json();
+
+        // Show success message
+        alert(`Анализ завершен!\nТип почвы: ${data.soil_type || 'N/A'}\nТочность: ${data.confidence ? (data.confidence * 100).toFixed(0) + '%' : 'N/A'}`);
+
+        // Reload stats and recent analyses
+        loadStats();
+        loadRecentAnalyses();
+
+        // Reset file input
+        selectedFile = null;
+        document.getElementById('dropzone-file').value = '';
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Ошибка при анализе. Попробуйте снова.');
+    } finally {
+        analyzeBtn.disabled = false;
+        analyzeBtn.innerHTML = originalText;
+    }
+}
+
+// Setup file input handler
+function setupQuickAnalysis() {
+    const fileInput = document.getElementById('dropzone-file');
+    const analyzeBtn = document.querySelector('.glass-panel button');
+
+    // File selection handler
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            selectedFile = file;
+            console.log('File selected:', file.name);
+        }
+    });
+
+    // Analyze button handler
+    analyzeBtn.addEventListener('click', quickAnalyze);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserData();
+    loadStats();
+    loadRecentAnalyses();
+    setupQuickAnalysis();
+});
+</script>
+</body></html>

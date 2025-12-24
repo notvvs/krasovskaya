@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoilAnalyzer - Регистрация</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30e85e",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#112115",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .bg-pattern {
+            background-image: radial-gradient(circle at 10% 20%, rgba(48, 232, 94, 0.1) 0%, transparent 20%),
+                              radial-gradient(circle at 90% 80%, rgba(48, 232, 94, 0.05) 0%, transparent 20%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden">
+<div class="relative flex h-full min-h-screen w-full flex-col bg-pattern">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#24472d] px-6 lg:px-10 py-4 glass-card border-x-0 border-t-0 sticky top-0 z-50">
+<div class="flex items-center gap-3 text-white cursor-pointer">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">SoilAnalyzer</h2>
+</div>
+<div class="hidden md:flex items-center gap-9">
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="/about">О нас</a>
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="/about">Решения</a>
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="/about">Контакты</a>
+</div>
+<div class="flex items-center gap-4">
+<a class="text-white text-sm font-medium hover:text-primary transition-colors hidden sm:block" href="/login">Войти</a>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-primary hover:bg-green-400 transition-colors text-[#112215] text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Регистрация</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col items-center justify-center p-4 py-12 relative overflow-hidden">
+<!-- Decorative Elements -->
+<div class="absolute top-[20%] left-[10%] w-64 h-64 bg-primary/10 rounded-full blur-[80px] -z-10"></div>
+<div class="absolute bottom-[20%] right-[10%] w-96 h-96 bg-primary/5 rounded-full blur-[100px] -z-10"></div>
+<div class="glass-card rounded-2xl w-full max-w-[520px] p-8 md:p-10 relative z-10 flex flex-col gap-6">
+<!-- Header Text -->
+<div class="text-center">
+<h1 class="text-white tracking-light text-3xl md:text-4xl font-bold leading-tight mb-3">Регистрация</h1>
+<p class="text-white/60 text-base font-normal leading-normal">Создайте аккаунт для доступа к AI-анализу почвы</p>
+</div>
+<!-- Form -->
+<form class="flex flex-col gap-5 w-full">
+<!-- Username -->
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium leading-normal ml-1">Имя пользователя</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/40 text-[20px]">person</span>
+<input id="username" class="form-input w-full rounded-full border border-[#346540] bg-[#1a3220]/50 focus:bg-[#1a3220] focus:border-primary text-white h-12 pl-12 pr-4 placeholder:text-white/30 text-base focus:ring-0 transition-all" placeholder="Введите ваше имя" type="text" required/>
+</div>
+</div>
+<!-- Email -->
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium leading-normal ml-1">Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/40 text-[20px]">mail</span>
+<input id="email" class="form-input w-full rounded-full border border-[#346540] bg-[#1a3220]/50 focus:bg-[#1a3220] focus:border-primary text-white h-12 pl-12 pr-4 placeholder:text-white/30 text-base focus:ring-0 transition-all" placeholder="example@mail.com" type="email" required/>
+</div>
+</div>
+<!-- Password -->
+<div class="flex flex-col gap-2">
+<label class="text-white text-sm font-medium leading-normal ml-1">Пароль</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/40 text-[20px]">lock</span>
+<input id="password" class="form-input w-full rounded-full border border-[#346540] bg-[#1a3220]/50 focus:bg-[#1a3220] focus:border-primary text-white h-12 pl-12 pr-12 placeholder:text-white/30 text-base focus:ring-0 transition-all" placeholder="••••••••" type="password" required minlength="8"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors cursor-pointer flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<p class="text-xs text-white/40 ml-1 mt-1">Минимум 8 символов</p>
+</div>
+<!-- Submit Button -->
+<button id="registerBtn" class="mt-2 w-full cursor-pointer flex items-center justify-center rounded-full h-12 bg-primary hover:bg-green-400 transition-all text-[#112215] text-base font-bold leading-normal shadow-[0_0_15px_rgba(48,232,94,0.3)] hover:shadow-[0_0_25px_rgba(48,232,94,0.5)]" type="submit">
+                        Зарегистрироваться
+                    </button>
+</form>
+<!-- Footer Link -->
+<div class="text-center mt-6">
+<p class="text-white/60 text-sm">
+                        Уже есть аккаунт?
+                        <a class="text-primary hover:text-green-300 font-bold transition-colors ml-1" href="/login">Войти</a>
+</p>
+</div>
+</div>
+</main>
+</div>
+
+<!-- Scripts -->
+<script>
+// Handle registration form submission
+document.querySelector('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const registerBtn = document.getElementById('registerBtn');
+
+    // Disable button and show loading state
+    registerBtn.disabled = true;
+    registerBtn.textContent = 'Регистрация...';
+
+    try {
+        const response = await fetch('/api/v1/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || 'Ошибка регистрации');
+        }
+
+        // Show success message
+        alert('Регистрация успешна! Проверьте email для верификации.');
+
+        // Redirect to verify page
+        window.location.href = '/verify?email=' + encodeURIComponent(email);
+
+    } catch (error) {
+        alert(error.message || 'Ошибка при регистрации. Попробуйте другой email.');
+        registerBtn.disabled = false;
+        registerBtn.textContent = 'Зарегистрироваться';
+    }
+});
+</script>
+</body></html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoilAnalyzer - О системе</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30e85e",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#112215",
+                        "card-dark": "#1a3220",
+                        "accent-green": "#24472d"
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white font-display overflow-x-hidden">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root">
+<!-- Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#24472d] bg-[#112215]/80 backdrop-blur-md px-10 py-3">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined text-4xl">eco</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">SoilAnalyzer</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="/">Главная</a>
+<a class="text-primary text-sm font-medium leading-normal" href="/about">О системе</a>
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="/dashboard">Dashboard</a>
+</div>
+<button onclick="window.location.href='/login'" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-[#112215] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 transition-opacity">
+<span class="truncate">Войти</span>
+</button>
+</div>
+</header>
+<main class="flex-1">
+<!-- Hero Section -->
+<section class="layout-container flex flex-col">
+<div class="px-4 md:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<div class="@container">
+<div class="flex flex-col gap-6 px-4 py-10 @[480px]:gap-8 @[864px]:flex-row items-center">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl @[480px]:h-auto @[480px]:min-w-[400px] @[864px]:w-1/2 shadow-2xl shadow-[#30e85e]/10" data-alt="Close up of rich dark soil with small green seedling sprouting" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAfcx0dD_QcoztPvNUHdc4pc55yH5iQWetLI7RksZd1PWMsF_m2viDgA96gO2hGOru7z8X9Tqg60niVsjhEowOXRtBZltrrqWW8YRnVk_EKuVPw56-3Rw1v0Y6DUSX8JvEF_Lk_fK-ghZWx-xLbGLHF_f4g-h876OWJPXrer-IMqOl92zyfT84A0kVpB3eoJQj2Qh7Df-CQbYdPQCdIZ5yZSMQpr6weebRUCEmVPYdFBWupvKMmiX9YRX8zlVUWJzfxDXxm2JKi1T0");'></div>
+<div class="flex flex-col gap-6 @[480px]:min-w-[400px] @[480px]:gap-8 @[864px]:w-1/2 justify-center">
+<div class="flex flex-col gap-4 text-left">
+<h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl">
+                                            О системе SoilAnalyzer
+                                        </h1>
+<h2 class="text-[#93c8a0] text-sm font-normal leading-relaxed @[480px]:text-base">
+                                            Инновационная платформа для глубокого анализа состава почвы с использованием передовых алгоритмов искусственного интеллекта. Мы помогаем аграриям принимать решения на основе данных.
+                                        </h2>
+</div>
+<button onclick="window.location.href='/analyze'" class="flex w-fit cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-primary text-[#112215] text-base font-bold leading-normal tracking-[0.015em] hover:scale-105 transition-transform">
+<span class="truncate">Начать анализ</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="layout-container flex flex-col bg-[#16291b]">
+<div class="px-4 md:px-40 flex flex-1 justify-center py-16">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<div class="flex flex-col gap-10 px-4 @container">
+<h1 class="text-white tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl max-w-[720px]">
+                                Наши возможности
+                            </h1>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-0">
+<!-- Card 1 -->
+<div class="flex flex-1 gap-4 rounded-xl border border-[#346540]/30 bg-[#1a3220]/60 backdrop-blur-sm p-6 flex-col hover:border-primary/50 transition-colors group">
+<div class="text-primary bg-[#30e85e]/10 w-fit p-3 rounded-lg group-hover:bg-[#30e85e]/20 transition-colors">
+<span class="material-symbols-outlined">science</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-white text-lg font-bold leading-tight">Химический анализ</h2>
+<p class="text-[#93c8a0] text-sm font-normal leading-relaxed">Полный разбор макро- и микроэлементов для точного понимания состава.</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex flex-1 gap-4 rounded-xl border border-[#346540]/30 bg-[#1a3220]/60 backdrop-blur-sm p-6 flex-col hover:border-primary/50 transition-colors group">
+<div class="text-primary bg-[#30e85e]/10 w-fit p-3 rounded-lg group-hover:bg-[#30e85e]/20 transition-colors">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-white text-lg font-bold leading-tight">Мониторинг влажности</h2>
+<p class="text-[#93c8a0] text-sm font-normal leading-relaxed">Отслеживание водного баланса в реальном времени с датчиков.</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex flex-1 gap-4 rounded-xl border border-[#346540]/30 bg-[#1a3220]/60 backdrop-blur-sm p-6 flex-col hover:border-primary/50 transition-colors group">
+<div class="text-primary bg-[#30e85e]/10 w-fit p-3 rounded-lg group-hover:bg-[#30e85e]/20 transition-colors">
+<span class="material-symbols-outlined">grass</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-white text-lg font-bold leading-tight">Рекомендации культур</h2>
+<p class="text-[#93c8a0] text-sm font-normal leading-relaxed">AI-подбор оптимальных культур для посадки в текущий сезон.</p>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="flex flex-1 gap-4 rounded-xl border border-[#346540]/30 bg-[#1a3220]/60 backdrop-blur-sm p-6 flex-col hover:border-primary/50 transition-colors group">
+<div class="text-primary bg-[#30e85e]/10 w-fit p-3 rounded-lg group-hover:bg-[#30e85e]/20 transition-colors">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-white text-lg font-bold leading-tight">Прогнозирование</h2>
+<p class="text-[#93c8a0] text-sm font-normal leading-relaxed">Прогноз урожайности на основе исторических данных и погоды.</p>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="flex flex-1 gap-4 rounded-xl border border-[#346540]/30 bg-[#1a3220]/60 backdrop-blur-sm p-6 flex-col hover:border-primary/50 transition-colors group">
+<div class="text-primary bg-[#30e85e]/10 w-fit p-3 rounded-lg group-hover:bg-[#30e85e]/20 transition-colors">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-white text-lg font-bold leading-tight">История полей</h2>
+<p class="text-[#93c8a0] text-sm font-normal leading-relaxed">Цифровой архив изменений почвы за все время наблюдений.</p>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="flex flex-1 gap-4 rounded-xl border border-[#346540]/30 bg-[#1a3220]/60 backdrop-blur-sm p-6 flex-col hover:border-primary/50 transition-colors group">
+<div class="text-primary bg-[#30e85e]/10 w-fit p-3 rounded-lg group-hover:bg-[#30e85e]/20 transition-colors">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-white text-lg font-bold leading-tight">Экспорт отчетов</h2>
+<p class="text-[#93c8a0] text-sm font-normal leading-relaxed">Мгновенная выгрузка данных в удобные форматы PDF и Excel.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- AI Model Section -->
+<section class="layout-container flex flex-col relative overflow-hidden">
+<!-- Decorative background elements -->
+<div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 50% 50%, #30e85e 0%, transparent 50%);"></div>
+<div class="px-4 md:px-40 flex flex-1 justify-center py-20">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1 relative z-10">
+<div class="flex flex-col items-center gap-6 text-center mb-12">
+<h2 class="text-white tracking-light text-[28px] md:text-4xl font-bold leading-tight">Технология машинного обучения</h2>
+<p class="text-[#93c8a0] text-base max-w-[700px]">
+                                Наша нейронная сеть обучалась на тысячах образцов почвы из разных климатических зон. Мы используем архитектуру глубокого обучения для выявления неочевидных закономерностей, которые невозможно заметить при традиционном анализе.
+                            </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col items-center justify-center gap-2 rounded-2xl p-8 border border-[#346540] bg-[#1a3220]/80 backdrop-blur-md">
+<div class="size-16 rounded-full border-4 border-primary flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-primary text-3xl">check_circle</span>
+</div>
+<p class="text-primary tracking-light text-4xl font-bold leading-tight">98%</p>
+<p class="text-white text-base font-medium leading-normal opacity-80">Точность модели</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-2xl p-8 border border-[#346540] bg-[#1a3220]/80 backdrop-blur-md">
+<div class="size-16 rounded-full border-4 border-primary flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-primary text-3xl">database</span>
+</div>
+<p class="text-primary tracking-light text-4xl font-bold leading-tight">50,000+</p>
+<p class="text-white text-base font-medium leading-normal opacity-80">Обучающая выборка</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-2xl p-8 border border-[#346540] bg-[#1a3220]/80 backdrop-blur-md">
+<div class="size-16 rounded-full border-4 border-primary flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-primary text-3xl">speed</span>
+</div>
+<p class="text-primary tracking-light text-4xl font-bold leading-tight">&lt; 2 сек</p>
+<p class="text-white text-base font-medium leading-normal opacity-80">Скорость анализа</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Soil Types Section -->
+<section class="layout-container flex flex-col bg-[#16291b]">
+<div class="px-4 md:px-40 flex flex-1 justify-center py-20">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<div class="flex flex-col gap-10">
+<div class="flex flex-col md:flex-row justify-between items-end gap-4">
+<h2 class="text-white text-3xl font-bold leading-tight">Типы почв в системе</h2>
+<a class="text-primary font-medium hover:underline flex items-center gap-1" href="#">
+                                    Смотреть все типы
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Soil Card 1 -->
+<div class="group relative overflow-hidden rounded-xl aspect-[3/4] cursor-pointer">
+<img alt="Rich dark black soil texture" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Rich dark black soil texture showing high fertility" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoWG4yJazMBUzc3mD9eOlRAV17xIVMB9ZtiljVAfBmsmKDVmQ9zgjo9JIWI45dwXoSbbrIeya36c0AkevPsBHP69LteCf-0qcPzkDLa_qkOA7Qk2Aas-iXMnMSmzVd931Gkpg43RKbZPWqrrOqhAoQMHq0If3XrfGFRQ9CiHx0T4aiP2cRiTLDrYTiGFMydqsYfFypjDdzXacp6v8SX9CXlIFmrlZ95_fNrC6E0TtW4ZYcNMFakyeWl9JuFGnRqZ0J0K4zbtwt0F8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 flex flex-col justify-end">
+<h3 class="text-white text-lg font-bold">Чернозём</h3>
+<p class="text-white/80 text-xs mt-1">Высокое плодородие, гумус 8-12%</p>
+</div>
+</div>
+<!-- Soil Card 2 -->
+<div class="group relative overflow-hidden rounded-xl aspect-[3/4] cursor-pointer">
+<img alt="Cracked dry clay soil texture" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Dry cracked clay soil texture showing density" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQmc7i1bEGfAKinOMqdHyeGKLgcRzkzgg9Cl0l2swUv0fwvJd_4tfAnE8Y4VLx1rIxam03b9_WjGVNHcXgrn8Qzw4Kn_uqVVuiCJAs8vlXKJibfidASs3BRZflo4W-UE-DT5YmSiczovjGYEgJHjmtcLpQLqNJXs5JpWgKKSjVOXqK5Xn2DyUUtAgTP5rgHfPc0wT76V8ozqVuTnbDbZeEkbFXKrLsmjnGFlBGmxYfDYEeRsruffKm0mgBBOsw_HMeGSPqzjHykfM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 flex flex-col justify-end">
+<h3 class="text-white text-lg font-bold">Глинистая</h3>
+<p class="text-white/80 text-xs mt-1">Плотная структура, влагоемкая</p>
+</div>
+</div>
+<!-- Soil Card 3 -->
+<div class="group relative overflow-hidden rounded-xl aspect-[3/4] cursor-pointer">
+<img alt="Light sandy soil texture" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Light colored sandy soil texture showing grains" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3Rbt8F0RK907NGnnI76bGwsKbUZawlJ2lWv2EAACrRpx126j7pXdV9ntu5lxIi9JZrnMZS4cfBANQ4IAYqgxhYeDMAM6gygfQERhO3Xm2bBrvpQqiRgaTKLoqUQdTA9jn0Z_-Lk0FrklOsd0gZpZmMuOnHsUX1dwMdYnnOP1rU5hADH8JSaF-ovealmgPnbNSQDzbof91qtml4dWwgZa1MzeCSXU5t5HTr2SPtMd6uChfYeGj3kOVXmCwaWyENXeGhMiYzZ5qfRI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 flex flex-col justify-end">
+<h3 class="text-white text-lg font-bold">Песчаная</h3>
+<p class="text-white/80 text-xs mt-1">Легкая, быстро прогревается</p>
+</div>
+</div>
+<!-- Soil Card 4 -->
+<div class="group relative overflow-hidden rounded-xl aspect-[3/4] cursor-pointer">
+<img alt="Brown loam soil texture mixed with organic matter" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Brown loam soil texture suitable for gardening" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnV6FqoUUSz3PwLKovFRxAoQPWThRnvoXmGQG07qg3HeQ4hlHTWG-_AHqAmFPBKxfR_OrBDEaxqFeqIoQKHQsVGjTt84WmJmgcqgol4oHNUz2uEAxxh0jmAiZ4s8szf36OL1-KDga5NsnNsPy2pgC6rru-LIR0t5mSnx18_OxJkEwsggePMb6lArhi1Clz9jJP7FpUWQPCmxdri_D25kQ-QRJz4n-icXEeSj4cYVFvPEKHjCJxlqbmGf7xIQPBGztDiiq48uXCbSM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 flex flex-col justify-end">
+<h3 class="text-white text-lg font-bold">Суглинок</h3>
+<p class="text-white/80 text-xs mt-1">Оптимальный баланс для культур</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Tech Stack Section -->
+<section class="layout-container flex flex-col">
+<div class="px-4 md:px-40 flex flex-1 justify-center py-20">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<h2 class="text-white text-3xl font-bold leading-tight mb-10 text-center">Технологический стек</h2>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+<!-- Tech Item -->
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border border-[#346540] bg-[#1a3220]/40 hover:bg-[#1a3220] transition-colors gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">code</span>
+<span class="text-white font-medium text-sm">Python</span>
+</div>
+<!-- Tech Item -->
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border border-[#346540] bg-[#1a3220]/40 hover:bg-[#1a3220] transition-colors gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">neurology</span>
+<span class="text-white font-medium text-sm">TensorFlow</span>
+</div>
+<!-- Tech Item -->
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border border-[#346540] bg-[#1a3220]/40 hover:bg-[#1a3220] transition-colors gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">html</span>
+<span class="text-white font-medium text-sm">React</span>
+</div>
+<!-- Tech Item -->
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border border-[#346540] bg-[#1a3220]/40 hover:bg-[#1a3220] transition-colors gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">dns</span>
+<span class="text-white font-medium text-sm">PostgreSQL</span>
+</div>
+<!-- Tech Item -->
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border border-[#346540] bg-[#1a3220]/40 hover:bg-[#1a3220] transition-colors gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">cloud</span>
+<span class="text-white font-medium text-sm">AWS</span>
+</div>
+<!-- Tech Item -->
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border border-[#346540] bg-[#1a3220]/40 hover:bg-[#1a3220] transition-colors gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">deployed_code</span>
+<span class="text-white font-medium text-sm">Docker</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="layout-container flex flex-col mb-10">
+<div class="px-4 md:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#2d5f30] to-[#1a3220] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 border border-[#346540]">
+<!-- Decorative glow -->
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary blur-[100px] opacity-20 pointer-events-none"></div>
+<div class="flex flex-col gap-3 relative z-10 text-center md:text-left">
+<h2 class="text-white text-3xl md:text-4xl font-bold leading-tight">Готовы повысить урожайность?</h2>
+<p class="text-[#93c8a0] text-lg">Получите детальный анализ вашей почвы уже сегодня.</p>
+</div>
+<button onclick="window.location.href='/register'" class="relative z-10 flex min-w-[160px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-primary text-[#112215] text-base font-bold leading-normal tracking-[0.015em] hover:shadow-[0_0_20px_rgba(48,232,94,0.4)] transition-shadow">
+<span class="truncate">Начать бесплатно</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-[#24472d] bg-[#112215] px-10 py-8">
+<div class="layout-container flex justify-center">
+<div class="layout-content-container max-w-[960px] flex-1 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-primary">eco</span>
+<span class="font-bold">SoilAnalyzer</span>
+</div>
+<div class="flex gap-6">
+<a class="text-[#93c8a0] hover:text-white text-sm" href="#">Политика конфиденциальности</a>
+<a class="text-[#93c8a0] hover:text-white text-sm" href="#">Условия использования</a>
+</div>
+<p class="text-[#93c8a0] text-sm">© 2023 SoilAnalyzer. Все права защищены.</p>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

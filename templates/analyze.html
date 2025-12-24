@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="dark" lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Анализ почвы - SoilAnalyzer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "primary": "#30e85e",
+                "primary-hover": "#25c24d",
+                "background-dark": "#112115",
+            },
+            fontFamily: {
+                "display": ["Manrope", "sans-serif"]
+            }
+        }
+    }
+}
+</script>
+<style>
+.glass-card {
+    background: rgba(26, 44, 32, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+</style>
+</head>
+<body class="bg-background-dark font-display text-white min-h-screen flex flex-col">
+<!-- Header -->
+<header class="flex items-center justify-between border-b border-white/10 px-6 lg:px-10 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">eco</span>
+<h2 class="text-xl font-bold">SoilAnalyzer</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-white/70 hover:text-white transition-colors" href="/dashboard">Dashboard</a>
+<a class="text-primary font-bold" href="/analyze">Анализ</a>
+<a class="text-white/70 hover:text-white transition-colors" href="/history">История</a>
+<a class="text-white/70 hover:text-white transition-colors" href="/profile">Профиль</a>
+</nav>
+<button onclick="logout()" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors">
+<span class="material-symbols-outlined">logout</span>
+</button>
+</header>
+
+<!-- Main Content -->
+<main class="flex-1 flex items-center justify-center p-6">
+<div class="w-full max-w-4xl">
+
+    <!-- Upload Zone (показывается изначально) -->
+    <div id="uploadZone" class="glass-card rounded-2xl p-12 flex flex-col items-center justify-center text-center min-h-[500px] cursor-pointer hover:border-primary/50 transition-all">
+        <div class="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-primary text-5xl">cloud_upload</span>
+        </div>
+        <h1 class="text-3xl font-bold mb-4">Загрузите фото почвы</h1>
+        <p class="text-white/60 text-lg mb-8 max-w-md">
+            Нажмите сюда или перетащите изображение<br/>
+            Поддерживаются форматы JPEG, PNG
+        </p>
+        <button id="selectFileBtn" class="flex items-center gap-2 px-8 py-4 rounded-full bg-primary hover:bg-primary-hover text-background-dark font-bold text-lg transition-all shadow-lg shadow-primary/30">
+            <span class="material-symbols-outlined">add_photo_alternate</span>
+            Выбрать файл
+        </button>
+    </div>
+
+    <!-- Loading State (показывается при загрузке) -->
+    <div id="loadingZone" class="glass-card rounded-2xl p-12 flex-col items-center justify-center text-center min-h-[500px] hidden">
+        <div class="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center mb-6 animate-pulse">
+            <span class="material-symbols-outlined text-primary text-5xl">hourglass_empty</span>
+        </div>
+        <h2 class="text-2xl font-bold mb-4">Анализируем почву...</h2>
+        <p class="text-white/60">Пожалуйста, подождите</p>
+    </div>
+
+    <!-- Results Zone (показывается после анализа) -->
+    <div id="resultsZone" class="hidden">
+        <div class="glass-card rounded-2xl p-8">
+            <!-- Image Preview -->
+            <div class="mb-6">
+                <img id="resultImage" class="w-full h-64 object-cover rounded-xl" alt="Analyzed soil"/>
+            </div>
+
+            <!-- Results -->
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 id="soilType" class="text-2xl font-bold">Тип почвы</h2>
+                    <span id="confidence" class="px-4 py-2 rounded-full bg-primary/20 text-primary font-bold"></span>
+                </div>
+
+                <div id="soilDescription" class="text-white/80 leading-relaxed">
+                    Описание почвы
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass-card p-4 rounded-xl">
+                        <div class="text-white/60 text-sm mb-1">pH уровень</div>
+                        <div id="phLevel" class="text-2xl font-bold">-</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl">
+                        <div class="text-white/60 text-sm mb-1">Влажность</div>
+                        <div id="moisture" class="text-2xl font-bold">-</div>
+                    </div>
+                </div>
+
+                <button onclick="resetAnalysis()" class="w-full py-4 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">refresh</span>
+                    Новый анализ
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+</main>
+
+<!-- Scripts -->
+<script src="/static/js/navigation.js"></script>
+<script>
+let selectedFile = null;
+
+// Create hidden file input
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.accept = 'image/*';
+fileInput.style.display = 'none';
+document.body.appendChild(fileInput);
+
+// Upload zone click
+document.getElementById('uploadZone').addEventListener('click', () => {
+    fileInput.click();
+});
+
+// Select file button click
+document.getElementById('selectFileBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    fileInput.click();
+});
+
+// File selected
+fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    selectedFile = file;
+    await analyzeSoil(file);
+});
+
+// Analyze soil
+async function analyzeSoil(file) {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+
+    // Show loading
+    document.getElementById('uploadZone').classList.add('hidden');
+    document.getElementById('loadingZone').classList.remove('hidden');
+    document.getElementById('loadingZone').classList.add('flex');
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const response = await fetch('/api/v1/soil/analyze', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка анализа');
+        }
+
+        const data = await response.json();
+        showResults(data, file);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Ошибка при анализе. Попробуйте снова.');
+        resetAnalysis();
+    }
+}
+
+// Show results
+function showResults(data, file) {
+    // Hide loading
+    document.getElementById('loadingZone').classList.add('hidden');
+
+    // Show image preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        document.getElementById('resultImage').src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    // Update results
+    document.getElementById('soilType').textContent = data.soil_type || 'Неизвестный тип';
+    document.getElementById('confidence').textContent = data.confidence ?
+        `${(data.confidence * 100).toFixed(0)}% точность` : 'N/A';
+    document.getElementById('soilDescription').textContent = data.description || 'Описание недоступно';
+    document.getElementById('phLevel').textContent = data.ph_level || 'N/A';
+    document.getElementById('moisture').textContent = data.moisture || 'N/A';
+
+    // Show results
+    document.getElementById('resultsZone').classList.remove('hidden');
+}
+
+// Reset analysis
+function resetAnalysis() {
+    document.getElementById('resultsZone').classList.add('hidden');
+    document.getElementById('loadingZone').classList.add('hidden');
+    document.getElementById('uploadZone').classList.remove('hidden');
+    selectedFile = null;
+    fileInput.value = '';
+}
+</script>
+</body>
+</html>
